@@ -160,6 +160,14 @@ Citiestable <- Citiesmetro_df %>%
   mutate(interracial = as.numeric(RACE != RACE_SP)) %>%
   summarise(prop_interracial = mean(interracial))
 
+# convert PWMETRO from a numeric variable into a factor variable
+Citiestable$PWMETRO = as.factor(Citiestable$PWMETRO)
+
+ggplot(data = Citiestable, aes(x = YEAR, y = prop_interracial, color = PWMETRO)) +
+  geom_point() +
+  geom_line()
+
+# Sunday, May 19th
 
 
 
