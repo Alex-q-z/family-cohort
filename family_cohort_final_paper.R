@@ -181,23 +181,23 @@ SmallCitiesMetro_df <- df %>%
 
 SmallCitiesNametable <- tibble(
   PWMETRO = c(5080, 7240, 1520), 
-  PWMETRO_names = c("Milwaukee", "San Antonio", "Charlotte")
+  Cities = c("Milwaukee", "San Antonio", "Charlotte")
 )
 
 SmallCitiesMetro_df <- SmallCitiesMetro_df %>%
   left_join(SmallCitiesNametable)
 
 SmallCitiestable <- SmallCitiesMetro_df %>%
-  group_by(YEAR, PWMETRO_names) %>%
+  group_by(YEAR, Cities) %>%
   mutate(interracial = as.numeric(RACE != RACE_SP)) %>%
   summarise(prop_interracial = mean(interracial))
 
-SmallCitiestable$PWMETRO_names = as.factor(SmallCitiestable$PWMETRO_names)
+SmallCitiestable$Cities = as.factor(SmallCitiestable$Cities)
 
-ggplot(data = SmallCitiestable, aes(x = YEAR, y = prop_interracial, color = PWMETRO_names)) +
+ggplot(data = SmallCitiestable, aes(x = YEAR, y = prop_interracial, color = Cities)) +
   geom_point() +
   geom_line() +
-  labs(title = "Trend in Interracial Marriage Rates in Small Cities")
+  labs(title = "Interracial Marriage Rates in Small Cities during 1980 to 2000")
 
 BigCitiesMetro_df <- df %>%
   filter(PWMETRO == 1600 | PWMETRO == 3360 | PWMETRO == 520) %>%
@@ -209,14 +209,22 @@ BigCitiesMetro_df <- df %>%
   filter(RACE_SP != 8) %>%
   filter(RACE_SP != 9) 
 
+BigCitiesNametable <- tibble(
+  PWMETRO = c(1600, 3360, 520), 
+  Cities = c("Chicago", "Houston", "Atlanta")
+)
+
+BigCitiesMetro_df <- BigCitiesMetro_df %>%
+  left_join(BigCitiesNametable)
+
 BigCitiestable <- BigCitiesMetro_df %>%
-  group_by(YEAR, PWMETRO) %>%
+  group_by(YEAR, Cities) %>%
   mutate(interracial = as.numeric(RACE != RACE_SP)) %>%
   summarise(prop_interracial = mean(interracial))
 
-BigCitiestable$PWMETRO = as.factor(BigCitiestable$PWMETRO)
+BigCitiestable$Cities = as.factor(BigCitiestable$Cities)
 
-ggplot(data = BigCitiestable, aes(x = YEAR, y = prop_interracial, color = PWMETRO)) +
+ggplot(data = BigCitiestable, aes(x = YEAR, y = prop_interracial, color = Cities)) +
   geom_point() +
   geom_line() +
-  labs(title = "Trend in Interracial Marriage Rates in Big Cities")
+  labs(title = "Interracial Marriage Rates in Big Cities during 1980 to 2000")
