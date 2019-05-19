@@ -169,7 +169,54 @@ ggplot(data = Citiestable, aes(x = YEAR, y = prop_interracial, color = PWMETRO))
 
 # Sunday, May 19th
 
+SmallCitiesMetro_df <- df %>%
+  filter(PWMETRO == 5080 | PWMETRO == 7240 | PWMETRO == 1520) %>%
+  filter(MARST == 1) %>%
+  filter(RACE != 7) %>%
+  filter(RACE != 8) %>%
+  filter(RACE != 9) %>%
+  filter(RACE_SP != 7) %>%
+  filter(RACE_SP != 8) %>%
+  filter(RACE_SP != 9) 
 
+SmallCitiesNametable <- tibble(
+  PWMETRO = c(5080, 7240, 1520), 
+  PWMETRO_names = c("Milwaukee", "San Antonio", "Charlotte")
+)
 
+SmallCitiesMetro_df <- SmallCitiesMetro_df %>%
+  left_join(SmallCitiesNametable)
 
+SmallCitiestable <- SmallCitiesMetro_df %>%
+  group_by(YEAR, PWMETRO_names) %>%
+  mutate(interracial = as.numeric(RACE != RACE_SP)) %>%
+  summarise(prop_interracial = mean(interracial))
 
+SmallCitiestable$PWMETRO_names = as.factor(SmallCitiestable$PWMETRO_names)
+
+ggplot(data = SmallCitiestable, aes(x = YEAR, y = prop_interracial, color = PWMETRO_names)) +
+  geom_point() +
+  geom_line() +
+  labs(title = "Trend in Interracial Marriage Rates in Small Cities")
+
+BigCitiesMetro_df <- df %>%
+  filter(PWMETRO == 1600 | PWMETRO == 3360 | PWMETRO == 520) %>%
+  filter(MARST == 1) %>%
+  filter(RACE != 7) %>%
+  filter(RACE != 8) %>%
+  filter(RACE != 9) %>%
+  filter(RACE_SP != 7) %>%
+  filter(RACE_SP != 8) %>%
+  filter(RACE_SP != 9) 
+
+BigCitiestable <- BigCitiesMetro_df %>%
+  group_by(YEAR, PWMETRO) %>%
+  mutate(interracial = as.numeric(RACE != RACE_SP)) %>%
+  summarise(prop_interracial = mean(interracial))
+
+BigCitiestable$PWMETRO = as.factor(BigCitiestable$PWMETRO)
+
+ggplot(data = BigCitiestable, aes(x = YEAR, y = prop_interracial, color = PWMETRO)) +
+  geom_point() +
+  geom_line() +
+  labs(title = "Trend in Interracial Marriage Rates in Big Cities")
