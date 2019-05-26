@@ -228,3 +228,21 @@ ggplot(data = BigCitiestable, aes(x = YEAR, y = prop_interracial, color = Cities
   geom_point() +
   geom_line() +
   labs(title = "Interracial Marriage Rates in Big Cities during 1980 to 2000")
+
+
+# May 26th
+
+df_regression <- df %>% 
+  filter(PWMETRO == 1520 | PWMETRO == 7240 | PWMETRO == 5080 | PWMETRO == 4480 | PWMETRO == 5600 | PWMETRO == 1600) %>%
+  mutate(race_non_white = if_else(RACE != 1, 1, 0, missing = NULL)) 
+
+prop_non_white = df_regression %>% 
+  group_by(PWMETRO, YEAR) %>%
+  summarise(diversity_prop = mean(race_non_white))
+
+df_regression <- left_join(df_regression, prop_non_white, by = c("PWMETRO", "YEAR"))
+
+#adding dummy variable for married or not 
+df_regression <- df_regression %>%
+  filter(MARST == 1) %>%
+  mutate(interracial_marriage = if_else(RACE != RACE_SP, 1, 0, missing = NULL))
