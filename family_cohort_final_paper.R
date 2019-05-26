@@ -246,3 +246,7 @@ df_regression <- left_join(df_regression, prop_non_white, by = c("PWMETRO", "YEA
 df_regression <- df_regression %>%
   filter(MARST == 1) %>%
   mutate(interracial_marriage = if_else(RACE != RACE_SP, 1, 0, missing = NULL))
+
+reg1 <-
+  felm(interracial_marriage~diversity_prop, data = df_regression)
+stargazer(reg1)
